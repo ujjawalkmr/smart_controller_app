@@ -1,0 +1,243 @@
+.app {
+  min-height: 100vh;
+  background: var(--esp-bg-gradient);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--esp-text-main);
+}
+
+.container {
+  width: 100%;
+  max-width: 440px;
+  background: var(--esp-card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--esp-border-color);
+  border-radius: var(--esp-radius);
+  padding: 2.25rem 1.75rem;
+  box-shadow: var(--esp-glow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: espSlideUp 0.35s ease-out;
+}
+
+/* Typography */
+.container h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  color: var(--esp-text-main);
+  letter-spacing: -0.02em;
+}
+
+.container h2 {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--esp-text-sub);
+  margin-top: -0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Connection Status Badge */
+.status {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-radius: 20px;
+  margin: 0 auto;
+  max-width: fit-content;
+}
+
+/* Device Overview Card */
+.device-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--esp-border-color);
+  border-radius: var(--esp-input-radius);
+  padding: 1rem;
+  position: relative;
+}
+
+.device-icon {
+  font-size: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.device-info h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 2px 0;
+  color: var(--esp-text-main);
+}
+
+.device-info p {
+  font-size: 0.8rem;
+  color: var(--esp-text-sub);
+  margin: 0;
+}
+
+.device-info .device-id {
+  font-size: 0.725rem;
+  color: var(--esp-text-muted);
+  font-family: monospace;
+  margin-top: 2px;
+}
+
+.connected {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--esp-success);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Wi-Fi Configuration Section */
+.wifi-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 1.25rem;
+  border-radius: var(--esp-input-radius);
+  border: 1px solid var(--esp-border-color);
+}
+
+.wifi-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.wifi-section p {
+  font-size: 0.825rem;
+  color: var(--esp-text-sub);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--esp-border-color);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--esp-text-main);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: var(--esp-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scan-button,
+.wifi-button {
+  background: var(--esp-primary);
+  color: #ffffff;
+}
+
+.scan-button:hover:not(:disabled),
+.wifi-button:hover:not(:disabled) {
+  background: var(--esp-primary-hover);
+}
+
+.scan-button:active:not(:disabled),
+.wifi-button:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.remove-wifi-button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.remove-wifi-button:hover:not(:disabled) {
+  background: var(--esp-danger);
+  color: #ffffff;
+}
+
+.disconnect-button {
+  background: transparent;
+  color: var(--esp-text-sub);
+  border: 1px solid var(--esp-border-color);
+}
+
+.disconnect-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--esp-text-main);
+}
+
+/* Error State */
+.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.825rem;
+  text-align: center;
+}
+
+/* Entrance Animation */
+@keyframes espSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

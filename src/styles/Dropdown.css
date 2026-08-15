@@ -1,0 +1,146 @@
+/* Base Layout */
+.custom-dropdown-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+
+.custom-dropdown-container.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.dropdown-label {
+  font-weight: 500;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #f8fafc;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.dropdown-arrow {
+  color: #94a3b8;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Update or add this in Dropdown.css */
+.dropdown-menu {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* =========================================
+   SIZING VARIANTS (sm, md, lg)
+   ========================================= */
+
+/* Small */
+.dropdown-size-sm .dropdown-label { font-size: 0.75rem; }
+.dropdown-size-sm .dropdown-header { padding: 6px 10px; font-size: 0.825rem; }
+.dropdown-size-sm .dropdown-arrow { width: 14px; height: 14px; }
+.dropdown-size-sm .dropdown-item { padding: 6px 8px; font-size: 0.8rem; }
+
+/* Medium (Default) */
+.dropdown-size-md .dropdown-label { font-size: 0.85rem; }
+.dropdown-size-md .dropdown-header { padding: 10px 14px; font-size: 0.95rem; }
+.dropdown-size-md .dropdown-arrow { width: 18px; height: 18px; }
+.dropdown-size-md .dropdown-item { padding: 10px 12px; font-size: 0.9rem; }
+
+/* Large */
+.dropdown-size-lg .dropdown-label { font-size: 0.95rem; }
+.dropdown-size-lg .dropdown-header { padding: 14px 18px; font-size: 1.1rem; }
+.dropdown-size-lg .dropdown-arrow { width: 22px; height: 22px; }
+.dropdown-size-lg .dropdown-item { padding: 12px 16px; font-size: 1rem; }
+
+/* =========================================
+   COLOR VARIANTS (primary, accent, success, danger)
+   ========================================= */
+
+/* 1. Primary (Cyan / ESP Theme) */
+.dropdown-variant-primary .dropdown-header:hover:not(:disabled),
+.dropdown-variant-primary .dropdown-header.open {
+  border-color: #38bdf8;
+}
+.dropdown-variant-primary .dropdown-arrow.rotated { color: #38bdf8; }
+.dropdown-variant-primary .dropdown-item:hover { background-color: #334155; color: #f8fafc; }
+.dropdown-variant-primary .dropdown-item.selected {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-weight: 600;
+}
+.dropdown-variant-primary .check-mark { color: #38bdf8; }
+
+/* 2. Accent (Purple / Violet) */
+.dropdown-variant-accent .dropdown-header:hover:not(:disabled),
+.dropdown-variant-accent .dropdown-header.open {
+  border-color: #a855f7;
+}
+.dropdown-variant-accent .dropdown-arrow.rotated { color: #a855f7; }
+.dropdown-variant-accent .dropdown-item:hover { background-color: #334155; color: #f8fafc; }
+.dropdown-variant-accent .dropdown-item.selected {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  font-weight: 600;
+}
+.dropdown-variant-accent .check-mark { color: #c084fc; }
+
+/* 3. Success (Emerald Green) */
+.dropdown-variant-success .dropdown-header:hover:not(:disabled),
+.dropdown-variant-success .dropdown-header.open {
+  border-color: #10b981;
+}
+.dropdown-variant-success .dropdown-arrow.rotated { color: #10b981; }
+.dropdown-variant-success .dropdown-item.selected {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  font-weight: 600;
+}
+.dropdown-variant-success .check-mark { color: #34d399; }
+
+/* 4. Danger (Red / Alert) */
+.dropdown-variant-danger .dropdown-header:hover:not(:disabled),
+.dropdown-variant-danger .dropdown-header.open {
+  border-color: #ef4444;
+}
+.dropdown-variant-danger .dropdown-arrow.rotated { color: #ef4444; }
+.dropdown-variant-danger .dropdown-item.selected {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  font-weight: 600;
+}
+.dropdown-variant-danger .check-mark { color: #f87171; }

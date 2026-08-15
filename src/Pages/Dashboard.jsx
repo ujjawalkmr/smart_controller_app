@@ -2,82 +2,42 @@ import React, { useState } from "react";
 import { deviceOnOff } from "../api/services/deviceService";
 
 import "../styles/Dashboard.css";
+import Dropdown from "../Component/DropDown";
 
 const Dashboard = () => {
-    const [isPowerOn, setIsPowerOn] = useState(true);
-    
-//      useEffect(() => {
+  const [isPowerOn, setIsPowerOn] = useState(true);
 
-//     const getDeviceStatus = async () => {
+  // New States for Controls
+  const [targetTemp, setTargetTemp] = useState(24); // in °C
+  const [compressorSpeed, setCompressorSpeed] = useState(50); // in %
+  const [compressorMode, setCompressorMode] = useState("eco");
 
-//       try {
+  const modeOptions = [
+    { label: "Eco Mode (Energy Saver)", value: "eco" },
+    { label: "Performance Mode", value: "perf" },
+    { label: "Turbo Mode", value: "turbo" },
+    { label: "Silent Mode", value: "silent" },
+  ];
 
-//         const response = await axios.get(
-//           `http://localhost:5000/api/devices/${deviceId}/status`
-//         );
+  const handleToggle = () => {
+    setIsPowerOn((prev) => !prev);
+  };
 
-//         console.log(
-//           "Device status:",
-//           response.data
-//         );
+  // Temperature adjustment handlers
+  const handleTempIncrease = () => {
+    if (isPowerOn && targetTemp < 40) {
+      setTargetTemp((prev) => prev + 1);
+    }
+  };
 
-//         setIsPowerOn(
-//           response.data.power === "ON"
-//         );
-
-//       } catch (error) {
-
-//         console.error(
-//           "Failed to get device status:",
-//           error
-//         );
-
-//       }
-
-//     };
-
-//     getDeviceStatus();
-
-//   }, [deviceId]);
-
-    
-  
-   const togglePower = async () => {
-
-    const newState = !isPowerOn;
-
-    const power = newState
-      ? "ON"
-      : "OFF";
-
-
-    try {
-
-      const response = await deviceOnOff(power);
-
-      console.log(
-        "Command response:",
-        response.data
-      );
-
-
-      // Update UI after API succeeds
-      setIsPowerOn(newState);
-
-    } catch (error) {
-
-      console.error(
-        "Failed to control device:",
-        error
-      );
-
+  const handleTempDecrease = () => {
+    if (isPowerOn && targetTemp > 16) {
+      setTargetTemp((prev) => prev - 1);
     }
   };
 
   return (
     <div className="dashboard-layout">
-     
-
       {/* Main Content */}
       <main className="dashboard-main">
         {/* Top Header Banner */}
@@ -96,7 +56,15 @@ const Dashboard = () => {
         {/* Hero Control Card with On/Off Button */}
         <section className={`hero-card ${isPowerOn ? "active-glow" : "muted"}`}>
           <div className="hero-info">
-            <h2>Main Device Hub</h2>
+            <Dropdown
+              label=""
+              options={modeOptions}
+              value={compressorMode}
+              onChange={(val) => setCompressorMode(val)}
+              size="md"
+              style={{ width: "250px" }}
+            />
+            {/* <h2>Main Device Hub</h2> */}
             <p>
               {isPowerOn
                 ? "ESP32 Controller active and broadcasting telemetry data."
@@ -107,7 +75,7 @@ const Dashboard = () => {
           <div className="power-control">
             <button
               className={`power-btn ${isPowerOn ? "on" : "off"}`}
-              onClick={togglePower}
+              onClick={handleToggle}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -118,7 +86,12 @@ const Dashboard = () => {
                 strokeLinejoin="round"
               >
                 <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
-                <line x1="12" y1="2" x2="12" y2="12" />
+                <line
+                  x1="12"
+                  y1="2"
+                  x2="12"
+                  y2="12"
+                />
               </svg>
             </button>
             <span className="power-label">
@@ -135,9 +108,7 @@ const Dashboard = () => {
               <span className="metric-title">Power Usage</span>
               <span className="metric-icon">⚡</span>
             </div>
-            <div className="metric-value">
-              {isPowerOn ? "14.2 W" : "0.0 W"}
-            </div>
+            <div className="metric-value">{isPowerOn ? "14.2 W" : "0.0 W"}</div>
             <div className="metric-footer">
               {isPowerOn ? "Normal load" : "No power draw"}
             </div>
@@ -149,21 +120,39 @@ const Dashboard = () => {
               <span className="metric-title">BLE Connections</span>
               <span className="metric-icon">📶</span>
             </div>
-            <div className="metric-value">{isPowerOn ? "3 Devices" : "0 Devices"}</div>
+            <div className="metric-value">
+              {isPowerOn ? "3 Devices" : "0 Devices"}
+            </div>
             <div className="metric-footer">
               {isPowerOn ? "1 ESP32 Provisioned" : "Bluetooth disabled"}
             </div>
           </div>
 
-          {/* Temperature */}
+          {/* Temperature with inline adjusters */}
           <div className="metric-card">
             <div className="metric-header">
-              <span className="metric-title">Core Temp</span>
+              <span className="metric-title">Core Temp / Target</span>
               <span className="metric-icon">🌡️</span>
             </div>
-            <div className="metric-value">{isPowerOn ? "38.5°C" : "21.0°C"}</div>
-            <div className="metric-footer">
-              {isPowerOn ? "Optimal temperature" : "Ambient level"}
+            <div className="metric-value">
+              {isPowerOn ? `38.5°C (${targetTemp}°C)` : "21.0°C"}
+            </div>
+            <div className="temp-control-buttons">
+              <button
+                className="btn-step"
+                onClick={handleTempDecrease}
+                disabled={!isPowerOn}
+              >
+                -
+              </button>
+              <span className="target-label">Target: {targetTemp}°C</span>
+              <button
+                className="btn-step"
+                onClick={handleTempIncrease}
+                disabled={!isPowerOn}
+              >
+                +
+              </button>
             </div>
           </div>
 
@@ -179,6 +168,28 @@ const Dashboard = () => {
             <div className="metric-footer">
               {isPowerOn ? "Continuous session" : "Offline"}
             </div>
+          </div>
+        </section>
+
+        {/* NEW: Interactive Device Controls Section */}
+        <section className="controls-grid">
+          {/* Compressor Speed Controller */}
+          <div className={`control-card ${!isPowerOn ? "disabled" : ""}`}>
+            <div className="control-header">
+              <h3>Compressor Speed</h3>
+              <span className="control-value">
+                {isPowerOn ? `${compressorSpeed}%` : "OFF"}
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={isPowerOn ? compressorSpeed : 0}
+              onChange={(e) => setCompressorSpeed(e.target.value)}
+              disabled={!isPowerOn}
+              className="slider"
+            />
           </div>
         </section>
       </main>

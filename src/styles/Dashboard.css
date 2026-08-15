@@ -96,12 +96,12 @@
 
 .hero-info h2 {
   font-size: 1.5rem;
-  margin: 0 0 0.5rem 0;
+  /* margin: 0 0 0.5rem 0; */
 }
 
 .hero-info p {
   color: var(--text-muted);
-  margin: 0;
+  margin-top: 4px;
   font-size: 0.95rem;
 }
 
@@ -204,4 +204,147 @@
 .metric-footer {
   font-size: 0.775rem;
   color: var(--text-muted);
+}
+/* Temp Control Buttons inside Metric Card */
+.temp-control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-step {
+  background-color: #334155;
+  color: #fff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-step:hover:not(:disabled) {
+  background-color: #38bdf8;
+  color: #0f172a;
+}
+
+.btn-step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.target-label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Container alignment */
+.temp-control-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* Button styling & exact center alignment */
+.btn-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #334155;
+  color: #f8fafc;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1; /* Prevents text pushing to bottom */
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.btn-step:hover:not(:disabled) {
+  background-color: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.btn-step:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.target-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+
+
+
+
+
+
+/* Controls Grid below metrics */
+.controls-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.control-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.control-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.control-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+
+.control-value {
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+/* Slider Style */
+.slider {
+  width: 100%;
+  accent-color: #38bdf8;
+  cursor: pointer;
 }

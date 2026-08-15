@@ -1,31 +1,23 @@
 // src/routes/PageRoutes.jsx
 
 import { Suspense } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import routesConfig from "../config/routeConfig";
 import ProtectedRoute from "./ProtectedRoute";
 import Navbar from "../component/Navbar";
 
 const PageRoutes = () => {
-
   return (
-    <BrowserRouter>
-<Navbar />
+    <div>
+      <Navbar />
       <Suspense fallback={<div>Loading...</div>}>
-
         <Routes>
-
           {routesConfig.map((route) => {
-
             const Page = route.element;
 
             if (route.protected) {
-console.log("Protected route:", route.path);
+              console.log("Protected route:", route.path);
               return (
                 <Route
                   key={route.path}
@@ -38,7 +30,7 @@ console.log("Protected route:", route.path);
                 </Route>
               );
             }
-console.log("Public route:", route.path);
+            console.log("Public route:", route.path);
             return (
               <Route
                 key={route.path}
@@ -46,14 +38,10 @@ console.log("Public route:", route.path);
                 element={<Page />}
               />
             );
-
           })}
-
         </Routes>
-
       </Suspense>
-
-    </BrowserRouter>
+    </div>
   );
 };
 

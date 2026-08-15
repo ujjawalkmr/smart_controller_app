@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { deviceOnOff } from "../api/services/deviceService";
+import React, { useState, useEffect } from "react";
+import { deviceOnOff, getAllDevices } from "../api/services/deviceService";
 
 import "../styles/Dashboard.css";
 import Dropdown from "../Component/DropDown";
@@ -12,12 +12,37 @@ const Dashboard = () => {
   const [compressorSpeed, setCompressorSpeed] = useState(50); // in %
   const [compressorMode, setCompressorMode] = useState("eco");
 
-  const modeOptions = [
-    { label: "Eco Mode (Energy Saver)", value: "eco" },
-    { label: "Performance Mode", value: "perf" },
-    { label: "Turbo Mode", value: "turbo" },
-    { label: "Silent Mode", value: "silent" },
-  ];
+  const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchDevices = async () => {
+    try {
+      const response = await getAllDevices();
+
+      console.log("Devices:", response);
+
+      setDevices(response || []);
+    } catch (error) {
+      console.error("Failed to fetch devices:", error);
+      setDevices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+  // const modeOptions = [
+  //   { label: "Eco Mode (Energy Saver)", value: "eco" },
+  //   { label: "Performance Mode", value: "perf" },
+  //   { label: "Turbo Mode", value: "turbo" },
+  //   { label: "Silent Mode", value: "silent" },
+  // ];
+  const modeOptions = devices.map((device, index) => ({
+    label: device.deviceKey,
+    value: `esp_${index + 1}`,
+  }));
 
   const handleToggle = () => {
     setIsPowerOn((prev) => !prev);
@@ -58,11 +83,21 @@ const Dashboard = () => {
           <div className="hero-info">
             <Dropdown
               label=""
-              options={modeOptions}
+              options={
+                loading ? [{ label: "Please wait...", value: "" }] : modeOptions
+              }
               value={compressorMode}
-              onChange={(val) => setCompressorMode(val)}
+              onTapOpenDropdown={() => {
+                console.log("Dropdown opened");
+                fetchDevices();
+              }}
+              onChange={(val) => {
+                setCompressorMode(val);
+                console.log("Selected Compressor Mode:", val);
+              }}
+              // onChange={(val) => setCompressorMode(val)}
               size="md"
-              style={{ width: "250px" }}
+              style={{ width: "350px" }}
             />
             {/* <h2>Main Device Hub</h2> */}
             <p>

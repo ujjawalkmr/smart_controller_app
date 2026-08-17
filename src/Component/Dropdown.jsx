@@ -1,7 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "../styles/Dropdown.css";
-
+// const modeOptions = [
+  //   { label: "Eco Mode (Energy Saver)", value: "eco" },
+  //   { label: "Performance Mode", value: "perf" },
+  //   { label: "Turbo Mode", value: "turbo" },
+  //   { label: "Silent Mode", value: "silent" },
+  // ];
 const Dropdown = ({
   label,
   options = [],
@@ -71,9 +76,9 @@ const Dropdown = ({
     };
   }, [isOpen]);
 
-    const handleSelect = (optionValue) => {
+    const handleSelect = (optionValue,optionLabel) => {
       console.log("Selected Option:", optionValue);
-    onChange(optionValue);
+    onChange(optionValue,optionLabel);
     setIsOpen(false);
   };
 
@@ -131,7 +136,7 @@ const Dropdown = ({
                 className={`dropdown-item ${
                   option.value === value ? "selected" : ""
                 }`}
-                onClick={() => handleSelect(option.value)}
+                onClick={() => handleSelect(option.value,option.label)}
               >
                 <span>{option.label}</span>
                 {option.value === value && (

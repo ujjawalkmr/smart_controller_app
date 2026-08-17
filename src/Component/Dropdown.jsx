@@ -11,7 +11,8 @@ const Dropdown = ({
   size = "md",
   variant = "primary",
   className = "",
-  placeholder = "Select Option",
+    placeholder = "Select Option",
+  onTapOpenDropdown = () => {},
   style = {},
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,9 +33,12 @@ const Dropdown = ({
   };
 
   // Toggle menu and calculate coordinates
-  const handleToggle = () => {
+    const handleToggle = () => {
+      console.log("Dropdown toggle clicked");
     if (disabled) return;
-    if (!isOpen) {
+        if (!isOpen) {
+            onTapOpenDropdown();
+        
       updateCoords();
     }
     setIsOpen((prev) => !prev);
@@ -67,7 +71,8 @@ const Dropdown = ({
     };
   }, [isOpen]);
 
-  const handleSelect = (optionValue) => {
+    const handleSelect = (optionValue) => {
+      console.log("Selected Option:", optionValue);
     onChange(optionValue);
     setIsOpen(false);
   };

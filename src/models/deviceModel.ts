@@ -1,4 +1,5 @@
-export default class DeviceModel {
+export class DeviceModel {
+  
   deviceKey: string | null;
   deviceId: string | null;
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  deviceOnOff,
+  devicePowerUpdate,
   getAllDevices,
   getDeviceById,
 } from "../api/services/deviceService";
@@ -31,11 +31,19 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("Context selectedDevice:", deviceProvider);
   }, [deviceProvider]);
+
+
   const fetchDeviceById = async (deviceId) => {
     try {
       setIsLoadingById(true);
       const response = await getDeviceById(deviceId);
       setSelectedDeviceProvider(response);
+      if (response.command.devicePower == "ON") {
+        console.log("Fetched device by ID:", response);
+        setIsPowerOn(true);
+      } else {
+        setIsPowerOn(false);
+      }
       console.log("provider check :", deviceProvider);
     } catch (error) {
       console.error("Failed to fetch device by ID:", error);
@@ -43,6 +51,7 @@ const Dashboard = () => {
       setIsLoadingById(false);
     }
   };
+
 
   const fetchDevices = async () => {
     try {
@@ -59,6 +68,22 @@ const Dashboard = () => {
     }
   };
 
+
+   const updateDevicePower = async (deviceName, devicePower) => {
+    try {
+      const response = await devicePowerUpdate(deviceName, devicePower);
+      setSelectedDeviceProvider((prev) => ({
+        ...prev,
+        command: {
+          ...prev.command,
+          devicePower,
+        },
+      }));
+    } catch (error) {
+      console.error("Failed to update device power:", error);
+    }
+  };
+
   const modeOptions = devices.map((device, index) => ({
     label: device.deviceKey,
     value: `esp_${index + 1}`,
@@ -72,9 +97,15 @@ const Dashboard = () => {
     setSelectedDeviceId(val);
     fetchDeviceById(label);
   };
-
-  const handleToggle = () => {
+ 
+  const handlePowerToggle = () => {
+    console.log(
+      "Power button clicked. Current state:",
+      deviceProvider.deviceKey,
+    );
     setIsPowerOn((prev) => !prev);
+    const newPower = isPowerOn ? "OFF" : "ON";
+    updateDevicePower(deviceProvider.deviceKey, newPower);
   };
 
   // Temperature adjustment handlers
@@ -115,7 +146,7 @@ const Dashboard = () => {
           loading={loadingFetchAll}
           onDropdownOpen={handleGetAllDeviceOnDropDown}
           onDeviceChange={handleOnChangeById}
-          onPowerToggle={handleToggle}
+          onPowerToggle={handlePowerToggle}
         />
 
         {/* Device control card Grid */}

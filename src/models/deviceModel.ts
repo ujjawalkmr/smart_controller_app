@@ -4,11 +4,11 @@ export class DeviceModel {
   deviceId: string | null;
 
   command: {
-    device_stitch: "ON" | "OFF" | "BLINK" | null;
+    devicePower: "ON" | "OFF" | "BLINK" | null;
   } | null;
 
   status: {
-    device_stitch: "ON" | "OFF" | "BLINK" | null;
+    devicePower: "ON" | "OFF" | "BLINK" | null;
   } | null;
 
   constructor(data: any = {}) {
@@ -17,13 +17,13 @@ export class DeviceModel {
 
     this.command = data.command
       ? {
-          device_stitch: data.command.device_stitch ?? "OFF",
+          devicePower: data.command.devicePower ?? "OFF",
         }
       : null;
 
     this.status = data.status
       ? {
-          device_stitch: data.status.device_stitch ?? "OFF",
+          devicePower: data.status.devicePower ?? "OFF",
         }
       : null;
   }

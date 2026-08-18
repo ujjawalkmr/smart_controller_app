@@ -18,9 +18,15 @@ export const getAllDevices = async () => {
 
 export const getDeviceById = async (deviceId) => {
   try {
-    const response = await api.get(`/device/info/${deviceId}`);
+    const response = await api.post("device/infoById", {
+      deviceName: deviceId,
+    });
     console.log("Response from getDeviceById:", response.data);
-    return DeviceModel.fromJson(response.data.data);
+     const deviceData = {
+      ...response.data.data,
+      deviceKey: deviceId,
+    };
+    return DeviceModel.fromJson(deviceData);
   } catch (error) {
     console.error("Error fetching device by ID:", error);
   }

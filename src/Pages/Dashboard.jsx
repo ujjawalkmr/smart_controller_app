@@ -1,19 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { deviceOnOff, getAllDevices } from "../api/services/deviceService";
+import {
+  deviceOnOff,
+  getAllDevices,
+  getDeviceById,
+} from "../api/services/deviceService";
+import { useDeviceContext } from "../context/DeviceContext";
 
 import "../styles/Dashboard.css";
 import Dropdown from "../Component/DropDown";
+import DeviceControlCard from "../Component/DashboardComponent/DeviceControlCard";
+import DeviceHeroCard from "../Component/DashboardComponent/DeviceHeroCard";
+import CompressorControlCard from "../Component/DashboardComponent/CompressorControlCard";
 
 const Dashboard = () => {
+  /// device provide which is storing device data.
+  const { deviceProvider, setSelectedDeviceProvider } = useDeviceContext();
+  // control for device on/off
   const [isPowerOn, setIsPowerOn] = useState(true);
 
   // New States for Controls
   const [targetTemp, setTargetTemp] = useState(24); // in °C
   const [compressorSpeed, setCompressorSpeed] = useState(50); // in %
-  const [compressorMode, setCompressorMode] = useState("eco");
+  const [selectedDeviceId, setSelectedDeviceId] = useState("eco");
 
+  /// dropdown list set
   const [devices, setDevices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  /// loader for when fetching all device.
+  const [loadingFetchAll, setLoadingFetchAll] = useState(true);
+  const [isLoadingById, setIsLoadingById] = useState(true);
+  useEffect(() => {
+    console.log("Context selectedDevice:", deviceProvider);
+  }, [deviceProvider]);
+  const fetchDeviceById = async (deviceId) => {
+    try {
+      setIsLoadingById(true);
+      const response = await getDeviceById(deviceId);
+      setSelectedDeviceProvider(response);
+      console.log("provider check :", deviceProvider);
+    } catch (error) {
+      console.error("Failed to fetch device by ID:", error);
+    } finally {
+      setIsLoadingById(false);
+    }
+  };
 
   const fetchDevices = async () => {
     try {
@@ -26,23 +55,23 @@ const Dashboard = () => {
       console.error("Failed to fetch devices:", error);
       setDevices([]);
     } finally {
-      setLoading(false);
+      setLoadingFetchAll(false);
     }
   };
 
-  useEffect(() => {
-    fetchDevices();
-  }, []);
-  // const modeOptions = [
-  //   { label: "Eco Mode (Energy Saver)", value: "eco" },
-  //   { label: "Performance Mode", value: "perf" },
-  //   { label: "Turbo Mode", value: "turbo" },
-  //   { label: "Silent Mode", value: "silent" },
-  // ];
   const modeOptions = devices.map((device, index) => ({
     label: device.deviceKey,
     value: `esp_${index + 1}`,
   }));
+  const handleGetAllDeviceOnDropDown = () => {
+    console.log("Dropdown opened");
+    fetchDevices();
+  };
+  const handleOnChangeById = (val, label) => {
+    console.log("Selected Compressor Mode:", label);
+    setSelectedDeviceId(val);
+    fetchDeviceById(label);
+  };
 
   const handleToggle = () => {
     setIsPowerOn((prev) => !prev);
@@ -77,156 +106,57 @@ const Dashboard = () => {
             {isPowerOn ? "System Online" : "Standby Mode"}
           </div>
         </header>
-
         {/* Hero Control Card with On/Off Button */}
-        <section className={`hero-card ${isPowerOn ? "active-glow" : "muted"}`}>
-          <div className="hero-info">
-            <Dropdown
-              label=""
-              options={
-                loading ? [{ label: "Please wait...", value: "" }] : modeOptions
-              }
-              value={compressorMode}
-              onTapOpenDropdown={() => {
-                console.log("Dropdown opened");
-                fetchDevices();
-              }}
-              onChange={(val) => {
-                setCompressorMode(val);
-                console.log("Selected Compressor Mode:", val);
-              }}
-              // onChange={(val) => setCompressorMode(val)}
-              size="md"
-              style={{ width: "350px" }}
-            />
-            {/* <h2>Main Device Hub</h2> */}
-            <p>
-              {isPowerOn
-                ? "ESP32 Controller active and broadcasting telemetry data."
-                : "System is powering down. Telemetry paused."}
-            </p>
-          </div>
 
-          <div className="power-control">
-            <button
-              className={`power-btn ${isPowerOn ? "on" : "off"}`}
-              onClick={handleToggle}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
-                <line
-                  x1="12"
-                  y1="2"
-                  x2="12"
-                  y2="12"
-                />
-              </svg>
-            </button>
-            <span className="power-label">
-              {isPowerOn ? "POWER ON" : "POWER OFF"}
-            </span>
-          </div>
-        </section>
+        <DeviceHeroCard
+          isPowerOn={isPowerOn}
+          options={modeOptions}
+          selectedDeviceId={selectedDeviceId}
+          loading={loadingFetchAll}
+          onDropdownOpen={handleGetAllDeviceOnDropDown}
+          onDeviceChange={handleOnChangeById}
+          onPowerToggle={handleToggle}
+        />
 
-        {/* Metrics Grid */}
+        {/* Device control card Grid */}
         <section className="metrics-grid">
           {/* Power Consumption */}
-          <div className="metric-card">
-            <div className="metric-header">
-              <span className="metric-title">Power Usage</span>
-              <span className="metric-icon">⚡</span>
-            </div>
-            <div className="metric-value">{isPowerOn ? "14.2 W" : "0.0 W"}</div>
-            <div className="metric-footer">
-              {isPowerOn ? "Normal load" : "No power draw"}
-            </div>
-          </div>
-
-          {/* Connected Nodes */}
-          <div className="metric-card">
-            <div className="metric-header">
-              <span className="metric-title">BLE Connections</span>
-              <span className="metric-icon">📶</span>
-            </div>
-            <div className="metric-value">
-              {isPowerOn ? "3 Devices" : "0 Devices"}
-            </div>
-            <div className="metric-footer">
-              {isPowerOn ? "1 ESP32 Provisioned" : "Bluetooth disabled"}
-            </div>
-          </div>
-
-          {/* Temperature with inline adjusters */}
-          <div className="metric-card">
-            <div className="metric-header">
-              <span className="metric-title">Core Temp / Target</span>
-              <span className="metric-icon">🌡️</span>
-            </div>
-            <div className="metric-value">
-              {isPowerOn ? `38.5°C (${targetTemp}°C)` : "21.0°C"}
-            </div>
-            <div className="temp-control-buttons">
-              <button
-                className="btn-step"
-                onClick={handleTempDecrease}
-                disabled={!isPowerOn}
-              >
-                -
-              </button>
-              <span className="target-label">Target: {targetTemp}°C</span>
-              <button
-                className="btn-step"
-                onClick={handleTempIncrease}
-                disabled={!isPowerOn}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* System Uptime */}
-          <div className="metric-card">
-            <div className="metric-header">
-              <span className="metric-title">Uptime</span>
-              <span className="metric-icon">⏱️</span>
-            </div>
-            <div className="metric-value">
-              {isPowerOn ? "04h 12m" : "00h 00m"}
-            </div>
-            <div className="metric-footer">
-              {isPowerOn ? "Continuous session" : "Offline"}
-            </div>
-          </div>
+          <DeviceControlCard
+            title="Power Usage"
+            icon="⚡"
+            value={isPowerOn ? "14.2 W" : "0.0 W"}
+            footer={isPowerOn ? "Normal load" : "No power draw"}
+          />
+          <DeviceControlCard
+            title="BLE Connections"
+            icon="📶"
+            value={isPowerOn ? "3 Devices" : "0 Devices"}
+            footer={isPowerOn ? "1 ESP32 Provisioned" : "Bluetooth disabled"}
+          />
+          <DeviceControlCard
+            title="Core Temp / Target"
+            icon="🌡️"
+            value={isPowerOn ? `38.5°C (${targetTemp}°C)` : "21.0°C"}
+            showTempControls
+            targetValue={targetTemp}
+            onDecrease={handleTempDecrease}
+            onIncrease={handleTempIncrease}
+            disabled={!isPowerOn}
+          />
+          <DeviceControlCard
+            title="Uptime"
+            icon="⏱️"
+            value={isPowerOn ? "04h 12m" : "00h 00m"}
+            footer={isPowerOn ? "Continuous session" : "Offline"}
+          />
         </section>
 
         {/* NEW: Interactive Device Controls Section */}
-        <section className="controls-grid">
-          {/* Compressor Speed Controller */}
-          <div className={`control-card ${!isPowerOn ? "disabled" : ""}`}>
-            <div className="control-header">
-              <h3>Compressor Speed</h3>
-              <span className="control-value">
-                {isPowerOn ? `${compressorSpeed}%` : "OFF"}
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={isPowerOn ? compressorSpeed : 0}
-              onChange={(e) => setCompressorSpeed(e.target.value)}
-              disabled={!isPowerOn}
-              className="slider"
-            />
-          </div>
-        </section>
+        <CompressorControlCard
+          isPowerOn={isPowerOn}
+          compressorSpeed={compressorSpeed}
+          onSpeedChange={setCompressorSpeed}
+        />
       </main>
     </div>
   );

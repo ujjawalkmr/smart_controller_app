@@ -177,6 +177,7 @@
   flex-direction: column;
   gap: 0.5rem;
   backdrop-filter: blur(12px);
+  text-align: left;
 }
 
 .metric-header {

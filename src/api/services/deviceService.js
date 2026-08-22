@@ -3,7 +3,7 @@ import { DeviceModel } from "../../models/deviceModel.ts";
 
 export const getAllDevices = async () => {
   try {
-    const response = await api.get("/device/info");
+    const response = await api.get("/info");
 
     const devices = response.data.data.map((item) =>
       DeviceModel.fromJson(item),
@@ -17,7 +17,7 @@ export const getAllDevices = async () => {
 
 export const getDeviceById = async (deviceId) => {
   try {
-    const response = await api.post("device/infoById", {
+    const response = await api.post("/infoById", {
       deviceName: deviceId,
     });
      const deviceData = {
@@ -32,7 +32,7 @@ export const getDeviceById = async (deviceId) => {
 
 export const devicePowerUpdate = async (deviceName,devicePower) => {
   try {
-    const response = await api.post("/device/power", { deviceName:deviceName, devicePower: devicePower });
+    const response = await api.post("/power", { deviceName:deviceName, devicePower: devicePower });
     return response.data;
   } catch (error) {
     console.error("Error fetching properties:", error);

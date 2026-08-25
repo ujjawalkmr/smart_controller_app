@@ -25,8 +25,8 @@
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   border-radius: 10px;
   display: flex;
@@ -36,16 +36,36 @@
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-.brand-icon svg {
+
+/* .brand-icon svg {
   width: 20px;
   height: 20px;
+} */
+.brand-icon img {
+  height: 40px;
+  width: 40px;       
+  width: auto;   
+  max-height: 40px;
+  border-radius: 10%;   
+  object-fit: contain; 
 }
-
-.brand-name {
+/* .brand-name {
   font-size: 1.15rem;
   font-weight: 700;
   color: #f8fafc;
   letter-spacing: -0.02em;
+} */
+ .brand-name {
+  padding-left: 4px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.25rem;      
+  font-weight: 700;         
+  letter-spacing: 0.5px;     
+  color: #0f172a;           
+  background: linear-gradient(135deg, #232c43 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  display: inline-block;
 }
 
 /* Navigation Right Group */

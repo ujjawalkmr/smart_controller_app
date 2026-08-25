@@ -3,6 +3,7 @@ import {
   devicePowerUpdate,
   getAllDevices,
   getDeviceById,
+  deviceTemperatureUpdate,
 } from "../api/services/deviceService";
 import { useDeviceContext } from "../context/DeviceContext";
 
@@ -32,7 +33,6 @@ const Dashboard = () => {
     console.log("Context selectedDevice:", deviceProvider);
   }, [deviceProvider]);
 
-
   const fetchDeviceById = async (deviceId) => {
     try {
       setIsLoadingById(true);
@@ -52,7 +52,6 @@ const Dashboard = () => {
     }
   };
 
-
   const fetchDevices = async () => {
     try {
       const response = await getAllDevices();
@@ -68,8 +67,7 @@ const Dashboard = () => {
     }
   };
 
-
-   const updateDevicePower = async (deviceName, devicePower) => {
+  const updateDevicePower = async (deviceName, devicePower) => {
     try {
       const response = await devicePowerUpdate(deviceName, devicePower);
       setSelectedDeviceProvider((prev) => ({
@@ -97,7 +95,7 @@ const Dashboard = () => {
     setSelectedDeviceId(val);
     fetchDeviceById(label);
   };
- 
+
   const handlePowerToggle = () => {
     console.log(
       "Power button clicked. Current state:",
@@ -108,16 +106,43 @@ const Dashboard = () => {
     updateDevicePower(deviceProvider.deviceKey, newPower);
   };
 
+  const updateDeviceTemperature = async (deviceName, deviceTemperature) => {
+    try {
+      console.log(
+        "Updating device temperature for:",
+        deviceName,
+        "to",
+        deviceTemperature,
+      );
+      const response = await deviceTemperatureUpdate(
+        deviceName,
+        deviceTemperature,
+      );
+      setSelectedDeviceProvider((prev) => ({
+        ...prev,
+        command: {
+          ...prev.command,
+          deviceTemperature,
+        },
+      }));
+    } catch (error) {
+      console.error("Failed to update device temperature:", error);
+    }
+  };
   // Temperature adjustment handlers
   const handleTempIncrease = () => {
     if (isPowerOn && targetTemp < 40) {
+      const newTemperature = targetTemp + 1;
       setTargetTemp((prev) => prev + 1);
+       updateDeviceTemperature(deviceProvider.deviceKey, newTemperature);
     }
   };
 
   const handleTempDecrease = () => {
     if (isPowerOn && targetTemp > 16) {
+      const newTemperature = targetTemp - 1;
       setTargetTemp((prev) => prev - 1);
+      updateDeviceTemperature(deviceProvider.deviceKey, newTemperature);
     }
   };
 
@@ -140,6 +165,7 @@ const Dashboard = () => {
         {/* Hero Control Card with On/Off Button */}
 
         <DeviceHeroCard
+          deviceProvider={deviceProvider}
           isPowerOn={isPowerOn}
           options={modeOptions}
           selectedDeviceId={selectedDeviceId}
@@ -155,30 +181,30 @@ const Dashboard = () => {
           <DeviceControlCard
             title="Power Usage"
             icon="⚡"
-            value={isPowerOn ? "14.2 W" : "0.0 W"}
-            footer={isPowerOn ? "Normal load" : "No power draw"}
+            value={isPowerOn && deviceProvider ? "14.2 W" : "0.0 W"}
+            footer={isPowerOn && deviceProvider ? "Normal load" : "No power draw"}
           />
           <DeviceControlCard
             title="BLE Connections"
             icon="📶"
-            value={isPowerOn ? "3 Devices" : "0 Devices"}
-            footer={isPowerOn ? "1 ESP32 Provisioned" : "Bluetooth disabled"}
+            value={isPowerOn && deviceProvider ? "3 Devices" : "0 Devices"}
+            footer={isPowerOn && deviceProvider ? "1 ESP32 Provisioned" : "Bluetooth disabled"}
           />
           <DeviceControlCard
             title="Core Temp / Target"
             icon="🌡️"
-            value={isPowerOn ? `38.5°C (${targetTemp}°C)` : "21.0°C"}
+            value={isPowerOn && deviceProvider ? `38.5°C (${targetTemp}°C)` : "21.0°C"}
             showTempControls
             targetValue={targetTemp}
             onDecrease={handleTempDecrease}
             onIncrease={handleTempIncrease}
-            disabled={!isPowerOn}
+            disabled={!isPowerOn || !deviceProvider}
           />
           <DeviceControlCard
             title="Uptime"
             icon="⏱️"
-            value={isPowerOn ? "04h 12m" : "00h 00m"}
-            footer={isPowerOn ? "Continuous session" : "Offline"}
+            value={isPowerOn && deviceProvider ? "04h 12m" : "00h 00m"}
+            footer={isPowerOn && deviceProvider ? "Continuous session" : "Offline"}
           />
         </section>
 

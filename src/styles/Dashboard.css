@@ -147,7 +147,10 @@
   color: var(--text-muted);
   border: 2px solid var(--card-border);
 }
-
+.power-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .power-btn.off:hover {
   background: rgba(239, 68, 68, 0.15);
   color: var(--accent-red);

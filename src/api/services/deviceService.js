@@ -39,3 +39,19 @@ export const devicePowerUpdate = async (deviceName,devicePower) => {
     throw error;
   }
 };
+
+export const deviceTemperatureUpdate = async (
+  deviceName,
+  deviceTemperature,
+) => {
+  try {
+    const response = await api.post("/temp", {
+      deviceName: deviceName,
+      deviceTemperature: deviceTemperature,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating device temperature:", error);
+    throw error;
+  }
+};

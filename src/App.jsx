@@ -7,12 +7,14 @@ import WifiConnection from './component/WifiConnection.jsx'
 import Dashboard from './Pages/Dashboard.jsx'
 import Navbar from './Component/Navbar.jsx'
 import PageRoutes from './Routes/PageRoutes.jsx'
+import Dash from './Pages/Dash.jsx'
 
 function App() {
   return (
     <div>
+      <Dash />
       {/* <Navbar /> */}
-      <PageRoutes />
+      {/* <PageRoutes /> */}
       {/* <Dashboard /> */}
       {/* <WifiConnection/> */}
     </div>

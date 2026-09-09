@@ -15,3 +15,5 @@
           │            │            │
           ▼            ▼            ▼
        ESP01         ESP02        ESP03    
+
+       # how to communicate esp and frontend

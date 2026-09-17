@@ -12,9 +12,9 @@ import Dash from './Pages/Dash.jsx'
 function App() {
   return (
     <div>
-      <Dash />
+      {/* <Dash /> */}
       {/* <Navbar /> */}
-      {/* <PageRoutes /> */}
+      <PageRoutes />
       {/* <Dashboard /> */}
       {/* <WifiConnection/> */}
     </div>

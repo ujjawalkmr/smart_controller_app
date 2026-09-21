@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useDeviceContext } from "../context/DeviceContext";
 
 import "../styles/Dashboard.css";
+import devicesData from "../data/devices.json";
 import Dropdown from "../Component/DropDown";
 import DeviceControlCard from "../Component/DashboardComponent/DeviceControlCard";
 import DeviceHeroCard from "../Component/DashboardComponent/DeviceHeroCard";
@@ -12,24 +13,72 @@ const Dashboard = () => {
   const { deviceProvider, setSelectedDeviceProvider } = useDeviceContext();
   const [isPowerOn, setIsPowerOn] = useState(true);
   const [selectedDeviceId, setSelectedDeviceId] = useState("eco");
-  const [loadingFetchAll, setLoadingFetchAll] = useState(true);
-  const [devices, setDevices] = useState([]);
+  const [loadingFetchAll, setLoadingFetchAll] = useState(false);
+  const [devices, setDevices] = useState(devicesData.devices);
+  const allKey = {
+    devicePowerOnOff: "deviceSwitch",
+  };
+  const updateDevice = (deviceId, key, value) => {
+    setDevices((currentDevices) =>
+      currentDevices.map((device) =>
+        device.deviceId === deviceId
+          ? {
+              ...device,
+              [key]: value,
+            }
+          : device,
+      ),
+    );
+
+    console.log(`Updated device ${deviceId}: set ${key} to ${value} }`);
+  };
+  const updateSelectedDevice = (key, value) => {
+    setSelectedDeviceProvider((currentDevice) => {
+      if (!currentDevice) return null;
+
+      return {
+        ...currentDevice,
+        [key]: value,
+      };
+    });
+  };
+  useEffect(() => {
+    console.log("JSON data:", devicesData);
+    console.log("JSON devices:", devicesData.devices);
+
+    setDevices(devicesData.devices);
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated devices:", devices);
+    console.log("Updated deviceProvider after power toggle:", deviceProvider);
+  }, [devices]);
 
   const modeOptions = devices.map((device, index) => ({
-    label: device.deviceKey,
+    label: `${device.deviceId}`,
     value: `esp_${index + 1}`,
   }));
   const handleGetAllDeviceOnDropDown = () => {
     console.log("Dropdown opened");
   };
-  const handleOnChangeById = (val, label) => {
+  const handleOnSelectedById = (val, label) => {
     console.log("Selected Compressor Mode:", label);
+    const selectedDevice = devices.find((device) => device.deviceId === label);
+
     setSelectedDeviceId(val);
+    setSelectedDeviceProvider(selectedDevice || null);
+    console.log("Selected deviceProvider:", deviceProvider);
   };
   const handlePowerToggle = () => {
-    setIsPowerOn((prev) => !prev);
-  };
+    const newPowerState = !isPowerOn;
+    const powerValue = newPowerState ? "ON" : "OFF";
 
+    console.log("Power toggled:", powerValue);
+
+    setIsPowerOn(newPowerState);
+    updateDevice(deviceProvider.deviceId, allKey.devicePowerOnOff, powerValue);
+    updateSelectedDevice(allKey.devicePowerOnOff, powerValue);
+  };
   return (
     <div className="dashboard-layout">
       {/* Main Content */}
@@ -55,7 +104,7 @@ const Dashboard = () => {
           selectedDeviceId={selectedDeviceId}
           loading={loadingFetchAll}
           onDropdownOpen={handleGetAllDeviceOnDropDown}
-          onDeviceChange={handleOnChangeById}
+          onDeviceChange={handleOnSelectedById}
           onPowerToggle={handlePowerToggle}
         />
 

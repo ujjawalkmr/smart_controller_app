@@ -41,7 +41,7 @@ const Navbar = () => {
         </NavLink>
         
        <NavLink
-          to="/Customers"
+          to="/customers"
           className={({ isActive }) =>
             isActive ? "nav-items active" : "nav-items"
           }

@@ -12,8 +12,8 @@ function App() {
   return (
     <div>
       {/* <Dash /> */}
-      {/* <Navbar /> */}
-      <PageRoutes />
+      <Navbar />
+      {/* <PageRoutes /> // this is another copy navbar  */}
       {/* <Dashboard /> */}
       {/* <WifiConnection/> */}
     </div>

@@ -40,7 +40,15 @@ const Navbar = () => {
           Home
         </NavLink>
         
-       
+       <NavLink
+          to="/Customers"
+          className={({ isActive }) =>
+            isActive ? "nav-items active" : "nav-items"
+          }
+        >
+          Customers
+        </NavLink>
+
        <NavLink
           to="/settings"
           className={({ isActive }) =>
